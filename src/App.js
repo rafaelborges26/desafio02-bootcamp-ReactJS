@@ -6,47 +6,50 @@ import "./styles.css";
 function App() {
 
     //var de estado
-  const [projects, setProjects] = useState([])
+  const [repositorys, setrepositorys] = useState([])
 
 
   useEffect(() => {
     api.get('repositories').then(response => {
-      
+     setrepositorys(response.data) 
   })
- },[])
-
+  },[])
 
 
   async function handleAddRepository() {
     const response = await api.post('repositories', {
-    "title": "teste2",
-    "url": "www.ta.com.br",
-    "techs": ["Node","React"]}
+    title: `Repositorio ${Date.now()}`,
+    url: "www.ta.com.br",
+    techs: ["Node","React"]}
     )
-      const project = response.data
+      const repository = response.data
 
-      setProjects([...projects, project])
+      setrepositorys([...repositorys, repository])
 
-      console.log(response.data)
+      //console.log(response.data)
   }
 
   async function handleRemoveRepository(id) {
-    // TODO list:  {projects.map(project =>  <li id={project.id} key={project.id}  > {project.title}  })
+    //api.delete()    
      
   }
 
   return (
     <div>
+      <>
       <ul data-testid="repository-list">
-      <li>            
-
-          <button onClick={() => handleRemoveRepository(1)}>
+          <h2>Repositorios</h2>
+        {repositorys.map(repository =>  <li key={repository.id}  > {repository.title} 
+        <button onClick={() => handleRemoveRepository(1)}>
             Remover
           </button>
-        </li>
+       </li> )}            
+
+          
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
+      </>
     </div>
   );
 }
