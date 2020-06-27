@@ -6,17 +6,13 @@ import "./styles.css";
 function App() {
 
     //var de estado
-  const [ repositorys, setrepositorys] = useState([])
- // const { Repositorydeleted, UnsetRepository } = useState('')
-
+  const [ repositories, setrepositories] = useState([])
 
   useEffect(() => {
     api.get('repositories').then(response => {
-     setrepositorys(response.data) 
+     setrepositories(response.data) 
   })
   },[])
-
-
 
   async function handleAddRepository() {
     const response = await api.post('repositories', {
@@ -26,7 +22,7 @@ function App() {
     )
       const repository = response.data
 
-      setrepositorys([...repositorys, repository])
+      setrepositories([...repositories, repository])
       
       //console.log(response.data)
   }
@@ -34,31 +30,21 @@ function App() {
   async function handleRemoveRepository(id) {
     await api.delete(`repositories/${id}`)
 
+    const arrayRepository = repositories.filter(repository => repository.id !== id)    
+    setrepositories(arrayRepository)
 
-    const arrayRepository = repositorys.filter(repository => repository.id !== id)
-    
-    setrepositorys(arrayRepository)
-
-  }  
-    //, {
-      //id: id
-    //} )
-    //alert(id)
-     
-  
+  }    
 
   return (
     <div>
       <>
       <ul data-testid="repository-list">
           <h2>Repositorios</h2>
-        {repositorys.map(repository =>  <li key={repository.id}  > {repository.title} 
-        <button onClick={() => handleRemoveRepository(repository.id)}>
+          {repositories.map(repository =>  <li key={repository.id}  > {repository.title} 
+          <button onClick={() => handleRemoveRepository(repository.id)}>
             Remover
           </button>
-       </li> )}            
-
-          
+          </li> )}            
       </ul>
 
       <button onClick={handleAddRepository}>Adicionar</button>
