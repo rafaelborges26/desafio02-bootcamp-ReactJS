@@ -6,7 +6,8 @@ import "./styles.css";
 function App() {
 
     //var de estado
-  const [repositorys, setrepositorys] = useState([])
+  const [ repositorys, setrepositorys] = useState([])
+ // const { Repositorydeleted, UnsetRepository } = useState('')
 
 
   useEffect(() => {
@@ -14,6 +15,7 @@ function App() {
      setrepositorys(response.data) 
   })
   },[])
+
 
 
   async function handleAddRepository() {
@@ -25,14 +27,25 @@ function App() {
       const repository = response.data
 
       setrepositorys([...repositorys, repository])
-
+      
       //console.log(response.data)
   }
 
   async function handleRemoveRepository(id) {
-    //api.delete()    
+    await api.delete(`repositories/${id}`)
+
+
+    const arrayRepository = repositorys.filter(repository => repository.id !== id)
+    
+    setrepositorys(arrayRepository)
+
+  }  
+    //, {
+      //id: id
+    //} )
+    //alert(id)
      
-  }
+  
 
   return (
     <div>
@@ -40,7 +53,7 @@ function App() {
       <ul data-testid="repository-list">
           <h2>Repositorios</h2>
         {repositorys.map(repository =>  <li key={repository.id}  > {repository.title} 
-        <button onClick={() => handleRemoveRepository(1)}>
+        <button onClick={() => handleRemoveRepository(repository.id)}>
             Remover
           </button>
        </li> )}            
